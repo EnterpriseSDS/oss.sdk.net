@@ -1400,18 +1400,29 @@ namespace OneSpanSign.Sdk.Services
             return GetSigningUrl(packageId, GetRole(package, signerId));
         }
 
-        private Role GetRole(Package package, string sigenrId) 
+        private Role GetRole(Package package, string sigenrId)
         {
-            foreach(Role role in package.Roles) 
+            foreach(Role role in package.Roles)
             {
-                foreach(OneSpanSign.API.Signer signer in role.Signers) 
+                foreach(OneSpanSign.API.Signer signer in role.Signers)
                 {
-                    if(signer.Id.Equals(sigenrId)) 
+                    if(signer.Id.Equals(sigenrId))
                     {
                         return role;
                     }
                 }
             }
+
+            // If the signer is not found in the roles, the signerId might be
+            // a Role Id. This is the case when a signer is "reassigned" by another signer.
+            foreach(Role role in package.Roles)
+            {
+                if (role.Id.Equals(sigenrId))
+                {
+                    return role;
+                }
+            }
+
             return new Role();
         }
 
