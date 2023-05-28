@@ -1176,6 +1176,29 @@ namespace OneSpanSign.Sdk.Services
             }
         }
 
+        public string GetSignerIdByRoleId(PackageId packageId, string roleId)
+        {
+            string path = template.UrlFor(UrlTemplate.GET_SIGNER_PATH)
+                .Replace("{packageId}", packageId.Id)
+                .Replace("{roleId}", roleId)
+                .Build();
+
+            try
+            {
+                string response = restClient.Get(path);
+                OneSpanSign.API.Role apiRole = JsonConvert.DeserializeObject<OneSpanSign.API.Role>(response, settings);
+                return apiRole.Signers[0].Id;
+            }
+            catch (OssServerException e)
+            {
+                throw new OssServerException("Could not retrieve signer." + " Exception: " + e.Message, e.ServerError, e);
+            }
+            catch (Exception e)
+            {
+                throw new OssException("Could not retrieve signer." + " Exception: " + e.Message, e);
+            }
+        }
+
         public void UpdateSigner(PackageId packageId, Signer signer)
         {
             Role apiPayload = new SignerConverter(signer).ToAPIRole(System.Guid.NewGuid().ToString());
