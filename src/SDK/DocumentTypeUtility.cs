@@ -15,7 +15,7 @@ namespace OneSpanSign.Sdk
 					normalized = normalized.Substring (0, normalized.Length - 1);
 				}
 
-				normalized += "." + Extension(type);
+				normalized += Extension(type);
 			}
 
 			return normalized;
@@ -26,13 +26,13 @@ namespace OneSpanSign.Sdk
 			switch (type)
 			{
 			case DocumentType.PDF:
-				return "pdf";
+				return ".pdf";
 			case DocumentType.WORD:
-				return "docx";
+				return ".docx";
             case DocumentType.RTF:
-                return "rtf";
+                return ".rtf";
             case DocumentType.ODT:
-                return "odt";
+                return ".odt";
 			default:
 				throw new OssException("Unknown DocumentType: " + type, null);
 			}
