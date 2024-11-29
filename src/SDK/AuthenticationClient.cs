@@ -15,16 +15,18 @@ namespace OneSpanSign.Sdk
             return authenticationService.GetSessionIdForUserAuthenticationToken(userAuthenticationToken);
         }
 
-        public string BuildRedirectToDesignerForUserAuthenticationToken(string userAuthenticationToken, PackageId packageId, string profile = null) {
-            return authenticationService.BuildRedirectToDesignerForUserAuthenticationToken(userAuthenticationToken, packageId, profile);
+		/// <inheritdoc cref="AuthenticationService.BuildRedirectToDesignerForUserAuthenticationToken(string, PackageId, string, string[])" />
+		public string BuildRedirectToDesignerForUserAuthenticationToken(string userAuthenticationToken, PackageId packageId, string profile = null, params string[] hideUiElementKeys) {
+            return authenticationService.BuildRedirectToDesignerForUserAuthenticationToken(userAuthenticationToken, packageId, profile, hideUiElementKeys);
         }
 
         public string GetSessionIdForSenderAuthenticationToken(string senderAuthenticationToken) {
             return authenticationService.GetSessionIdForSenderAuthenticationToken(senderAuthenticationToken);
         }
 
-        public string BuildRedirectToDesignerForSender(string senderAuthenticationToken, PackageId packageId, string profile = null) {
-            return authenticationService.BuildRedirectToDesignerForSender(senderAuthenticationToken, packageId, profile);
+        /// <inheritdoc cref="AuthenticationService.BuildRedirectToDesignerForSender(string, PackageId, string, string[])" />
+        public string BuildRedirectToDesignerForSender(string senderAuthenticationToken, PackageId packageId, string profile = null, params string[] hideUiElementKeys) {
+            return authenticationService.BuildRedirectToDesignerForSender(senderAuthenticationToken, packageId, profile, hideUiElementKeys);
         }
 
         public string BuildRedirectToPackageViewForSender(string userAuthenticationToken, PackageId packageId) {

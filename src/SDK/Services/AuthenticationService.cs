@@ -4,6 +4,7 @@ using OneSpanSign.Sdk.Internal;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace OneSpanSign.Sdk
 {
@@ -43,9 +44,14 @@ namespace OneSpanSign.Sdk
             catch (Exception e) {
                 throw new OssException("Could not authenticate using an authentication token."+ " Exception: " + e.Message, e);
             }
-        }        
+        }
 
-        public string BuildRedirectToDesignerForUserAuthenticationToken(string userAuthenticationToken, PackageId packageId, string profile)
+		/// <summary>
+		/// Builds a redirect URL to the designer for a user authentication token.
+		/// </summary>
+		/// <param name="hideUiElementKeys">You can use constants from <see cref="HideUiElementKeys" /></param>
+		/// <exception cref="OssException"></exception>
+		public string BuildRedirectToDesignerForUserAuthenticationToken(string userAuthenticationToken, PackageId packageId, string profile, params string[] hideUiElementKeys)
         {
             try {
                 string redirectPath = webpageTemplate.UrlFor(UrlTemplate.DESIGNER_REDIRECT_PATH)
@@ -57,6 +63,16 @@ namespace OneSpanSign.Sdk
 					redirectPath = redirectPath.Contains("?") ?
 						$"{redirectPath}&profile={profile}" :
 						$"{redirectPath}?profile={profile}";
+				}
+
+				if (hideUiElementKeys != null &&
+					hideUiElementKeys.Any())
+				{
+					string hideUiElementKeysString = string.Join(",", hideUiElementKeys);
+
+					redirectPath = redirectPath.Contains("?") ?
+						$"{redirectPath}&disable={hideUiElementKeysString}" :
+						$"{redirectPath}?disable={hideUiElementKeysString}";
 				}
 
 				string encodedRedirectPath = HttpUtility.UrlEncode(redirectPath);
@@ -86,9 +102,14 @@ namespace OneSpanSign.Sdk
             catch (Exception e) {
                 throw new OssException("Could not authenticate using a sender authentication token."+ " Exception: " + e.Message, e);
             }
-        }        
+        }
 
-        public string BuildRedirectToDesignerForSender(string senderAuthenticationToken, PackageId packageId, string profile)
+		/// <summary>
+		/// Builds a redirect URL to the designer for a sender authentication token.
+		/// </summary>
+		/// <param name="hideUiElementKeys">You can use constants from <see cref="HideUiElementKeys" /></param>
+		/// <exception cref="OssException"></exception>
+		public string BuildRedirectToDesignerForSender(string senderAuthenticationToken, PackageId packageId, string profile, params string[] hideUiElementKeys)
         {
             try {
                 string redirectPath = webpageTemplate.UrlFor(UrlTemplate.DESIGNER_REDIRECT_PATH)
@@ -102,7 +123,17 @@ namespace OneSpanSign.Sdk
 						$"{redirectPath}?profile={profile}";
 				}
 
-                string encodedRedirectPath = HttpUtility.UrlEncode(redirectPath);
+				if (hideUiElementKeys != null &&
+					hideUiElementKeys.Any())
+				{
+					string hideUiElementKeysString = string.Join(",", hideUiElementKeys);
+
+					redirectPath = redirectPath.Contains("?") ?
+						$"{redirectPath}&disable={hideUiElementKeysString}" :
+						$"{redirectPath}?disable={hideUiElementKeysString}";
+				}
+
+				string encodedRedirectPath = HttpUtility.UrlEncode(redirectPath);
                 string path = authenticationTemplate.UrlFor(UrlTemplate.AUTHENTICATION_PATH_FOR_SENDER_AUTHENTICATION_TOKEN_WITH_REDIRECT)
                         .Replace("{senderAuthenticationToken}", senderAuthenticationToken)
                         .Replace("{redirectUrl}", encodedRedirectPath)
